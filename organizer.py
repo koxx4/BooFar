@@ -50,11 +50,7 @@ def run(music_lib_path: str, music_lib_dest: str, grouping_order: list[str], fix
 
 	music_files = get_music_files_paths(music_lib_path)
 
-	cpu_count = os.cpu_count()
-	thread_count = 2
-
-	if cpu_count:
-		thread_count = cpu_count * 2
+	thread_count = core.estimate_number_of_threads()
 
 	thread_list = []
 

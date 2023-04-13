@@ -2,7 +2,7 @@
 '''
 
 from argparse import ArgumentParser
-from os import walk, listdir, rmdir
+from os import walk, listdir, rmdir, cpu_count
 
 AUTHOR_KEY = 'ARTIST'
 ALBUM_KEY = 'ALBUM'
@@ -21,17 +21,26 @@ UNKNOWN_DIC = {
 
 ALLOWED_MUSIC_EXT = ['.mp3', '.wav', '.flac', '.ogg', '.opus', '.m4a']
 
+def estimate_number_of_threads() -> int:
+	cpus = cpu_count()
+	thread_count = 2
+
+	if cpus:
+		thread_count = cpus * 2
+
+	return thread_count
+
 def split_into_chunks(arr: list[any], chunk_size: int) -> list[list[any]]:
 	chunks = []
 
 	for i in range(0, len(arr), chunk_size):
 		chunk = []
 		for j in range(chunk_size):
-			if (j + i >= len(arr)):
+			if j + i >= len(arr):
 				break
 			chunk.append(arr[j + i])
 		chunks.append(chunk)
-	
+
 	return chunks
 
 def delete_empty_dirs_from_folder(path: str):
