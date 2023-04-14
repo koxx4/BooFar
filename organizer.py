@@ -58,9 +58,9 @@ def run(music_lib_path: str, music_lib_dest: str, grouping_order: list[str], fix
 		for file in chunk:
 			args = (file, music_lib_dest, grouping_order, fix_filenames)
 			thread_list.append(Thread(target=process_music_file, args=args))
-		_ = [t.start() for t in thread_list]
-		_ = [t.join() for t in thread_list]
-		thread_list.clear()
+	_ = [t.start() for t in thread_list]
+	_ = [t.join() for t in thread_list]
+	thread_list.clear()
 
 
 	core.delete_empty_dirs_from_folder(music_lib_path)
