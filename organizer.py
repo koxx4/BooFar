@@ -7,6 +7,7 @@ from core import TITLE_KEY, UNKNOWN_DIC
 
 
 thread_mkdir_lock = threading.Lock()
+file_moving_lock = threading.Lock()
 
 def get_music_files_paths(music_lib_path: str) -> list[str]:
 
@@ -41,13 +42,21 @@ def process_music_file(music_file_absolute_path: str, music_lib_dest: str, group
 		file_name = fix_music_file_name_from_tag(music_file_absolute_path)
 
 	file_name = file_name.replace('/', ',')
+	
+	file_moving_lock.acquire()
 	os.rename(music_file_absolute_path, os.path.join(new_destination, file_name))
+	file_moving_lock.release()
 
 def run(music_lib_path: str, music_lib_dest: str, grouping_order: list[str], fix_filenames: bool):
+	'''Organizes library specifed at music_lib_path arg using specified grouping_order.
 
-	if not music_lib_dest:
-		music_lib_dest = music_lib_path
-
+	Arguments:
+		music_lib_path -- Source of current music library that should be organized
+		music_lib_dest -- Location of new organized library
+		grouping_order -- Order in which directories will be created and nested
+		fix_filenames -- Should program attempt to fix music filename using information
+		present in tags
+	'''
 	music_files = get_music_files_paths(music_lib_path)
 
 	thread_count = core.estimate_number_of_threads()
