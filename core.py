@@ -2,7 +2,7 @@
 '''
 
 from argparse import ArgumentParser
-from os import walk, listdir, rmdir, cpu_count, walk, path
+from os import walk, listdir, rmdir, cpu_count, path
 
 AUTHOR_KEY = 'ARTIST'
 ALBUM_KEY = 'ALBUM'
@@ -22,6 +22,15 @@ UNKNOWN_DIC = {
 ALLOWED_MUSIC_EXT = ['.mp3', '.wav', '.flac', '.ogg', '.opus', '.m4a']
 
 def estimate_number_of_threads() -> int:
+	"""
+	Estimates the number of threads based on the CPU count.
+	Number of threads will be equal to 2 * physical_cores as reported by os.
+	If number of physical cores could not be obtained then value of 2 threads 
+	will be returned.
+
+	:return: The estimated number of threads.
+	:rtype: int
+	"""
 	cpus = cpu_count()
 	thread_count = 2
 
@@ -31,6 +40,16 @@ def estimate_number_of_threads() -> int:
 	return thread_count
 
 def split_into_chunks(arr: list[any], chunk_size: int) -> list[list[any]]:
+	"""
+	Splits a list into smaller chunks of a specified size.
+
+	:param arr: The list to be split into chunks.
+	:type arr: list[any]
+	:param chunk_size: The desired size of each chunk.
+	:type chunk_size: int
+	:return: A list of smaller chunks.
+	:rtype: list[list[any]]
+	"""
 	chunks = []
 
 	for i in range(0, len(arr), chunk_size):
@@ -44,6 +63,14 @@ def split_into_chunks(arr: list[any], chunk_size: int) -> list[list[any]]:
 	return chunks
 
 def get_music_files_paths(music_lib_path: str) -> list[str]:
+	"""
+	Retrieves the absolute paths of music files within a given music library directory.
+
+	:param music_lib_path: The path to the music library directory.
+	:type music_lib_path: str
+	:return: A list of absolute paths of music files.
+	:rtype: list[str]
+	"""
 
 	music_files = []
 
@@ -64,11 +91,26 @@ def get_music_files_paths(music_lib_path: str) -> list[str]:
 	return music_files
 
 def delete_empty_dirs_from_folder(path: str):
+	"""
+	Deletes empty directories recursively from a given folder.
+
+	:param path: The path to the folder.
+	:type path: str
+	"""
 	for root, _, _ in walk(path, topdown=False):
 		if not listdir(root):
 			rmdir(root)
 
 def file_has_valid_music_extension(filename: str) -> bool:
+	"""
+	Checks if the filename has a valid music extension.
+	Allowed music file extensions are provided by contant ALLOWED_MUSIC_EXT.
+
+	:param filename: The filename to check.
+	:type filename: str
+	:return: True if the filename has a valid music extension, False otherwise.
+	:rtype: bool
+	"""
 	return any(filename.endswith(ext) for ext in ALLOWED_MUSIC_EXT)
 
 def define_and_build_program_arguments():
