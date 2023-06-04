@@ -1,9 +1,8 @@
 # BooFar
-Fugiat nisi sunt mollit sit eiusmod et sint magna. Dolore fugiat velit est aliqua dolore ipsum. Dolore deserunt adipisicing qui magna nulla exercitation quis aute reprehenderit adipisicing ullamco laborum incididunt velit. Est occaecat ex non pariatur adipisicing nostrud eu anim anim consequat pariatur est.
+BooFar is a command line utility that assists in organizing a local music collection/library. The program is capable of arranging files into folders corresponding to artists/genres/albums. It can also retrieve missing album covers and has the ability to interactively populate ID3 tags using Musicbrainz data. BooFar is written in python.
 # Features
 - Organize music files by albums and artists ✔️
-- Fetch missing album cover arts ❌
-- Fetch missing metadata ❌
-- Fix weird artifacts in filenames (for example when music file was download from internet using YoutubeDL) ❌
-- Detect broken headers ❌
-- Convert between various formats usinf ffmpeg ❌
+- Fetch missing album cover arts ✔️
+- Fetch missing metadata ✔️
+- Fix weird artifacts in filenames (for example when music file was download from internet using YoutubeDL) ✔️
+- Convert between various formats using ffmpeg ❌ (or you can use ffmpeg directly???)

@@ -1,0 +1,4 @@
+pytaglib
+get_cover_art
+ffmpeg-python
+googlesearch-python

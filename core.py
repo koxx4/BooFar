@@ -2,7 +2,7 @@
 '''
 
 from argparse import ArgumentParser
-from os import walk, listdir, rmdir, cpu_count
+from os import walk, listdir, rmdir, cpu_count, walk, path
 
 AUTHOR_KEY = 'ARTIST'
 ALBUM_KEY = 'ALBUM'
@@ -43,6 +43,26 @@ def split_into_chunks(arr: list[any], chunk_size: int) -> list[list[any]]:
 
 	return chunks
 
+def get_music_files_paths(music_lib_path: str) -> list[str]:
+
+	music_files = []
+
+	for root, _, files in walk(music_lib_path):
+		for file_name in files:
+
+			if not file_has_valid_music_extension(file_name):
+				continue
+
+			file_absolute_path = path.join(root, file_name)
+
+			# We ommit any possible sym links
+			if path.islink(file_absolute_path):
+				continue
+
+			music_files.append(file_absolute_path)
+
+	return music_files
+
 def delete_empty_dirs_from_folder(path: str):
 	for root, _, _ in walk(path, topdown=False):
 		if not listdir(root):
@@ -62,8 +82,12 @@ def define_and_build_program_arguments():
 	# Tworzenie parsera argumentów
 	parser = ArgumentParser(description='BooFar - aplikacja organizująca bibliotekę muzyczną.')
 
+	parser.add_argument('-o', '--organize', action='store_true', help='Włącza organizowanie bibliotekii muzycznej.')
+	parser.add_argument('-a', '--album-artworks', action='store_true', help='Włącza pobieranie okładen dla plików muzycznych')
+	parser.add_argument('-i', '--id3-tags', action='store_true', help='Włącza tryb interaktywnego uzupełniania tagów ID3 na podstawie nazwy pliku i bazy danych Musicbrainz')
+
 	# Dodawanie flag dla grupowania po artyście, albumie i gatunku
-	parser.add_argument('-g', '--group', type=str, help='Zdefiniuj grupowanie i jego kolejność', nargs=3, choices=[AUTHOR_KEY, ALBUM_KEY, GENRE_KEY], default=DEFAULT_GROUPING_ORDER)
+	parser.add_argument('-g', '--group', type=str, help='Zdefiniuj grupowanie i kolejność podczas organizowania bilbiotekii', nargs=3, choices=[AUTHOR_KEY, ALBUM_KEY, GENRE_KEY], default=DEFAULT_GROUPING_ORDER)
 	parser.add_argument('-f', '--fix-filenames', action='store_true', help='Naprawia nazwę pliku bazując na nazwie zamieszczonej w tagach')
 
 	# Dodawanie flagi dla określenia ścieżki do biblioteki muzycznej użytkownika
